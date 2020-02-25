@@ -6,5 +6,50 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
 
+```{r craps}
+die <- c(1:6)
+
+# One die roll
+roll_one_die <- function() {
+  sample(die, 1, replace = TRUE)
+}
+
+roll_one_die
+
+# Rolls two die, and provides values of each of the two
+roll_two_dice <- function() {
+  sample(die, 2, replace = TRUE)
+}
+
+# Rolls two die and totals them
+roll_two_dice_total <- function(){
+  roll_one_die() + roll_one_die()
+}
+
+
+# Iterate over a list (1-10), of a function preceded by a tilda (~)
+x <- tibble(results = map_int(1:10000, ~ roll_two_dice_total())) 
+
+x %>% 
+  ggplot(aes(results)) +
+  geom_histogram(binwidth = 1)
+
+tibble
+```
+
+```
+add_dice <- function(n = 1) {
+  stopifnot(is.numeric(n))
+  sum(sample(1:6, n, replace = TRUE))
+}
+
+roll_dice <- function(n = 10) {
+  stopifnot(is.numeric(n))
+  map_int(rep(2, n), add_dice)
+}
+
+roll_dice()
+````
